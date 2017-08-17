@@ -303,4 +303,34 @@ describe('Calculator', () => {
     };
     expect(calc.calculate(src)).to.be.deep.equal(expected);
   });
+
+  it('should force invalud values to zero when `forceZeros` is true', () => {
+    src = {
+      NaN,
+      undefined,
+      null: null,
+      empty: '',
+    };
+    const formulas = {
+      ƒNaN: ƒ => ƒ('NaN'),
+      ƒUndefined: ƒ => ƒ('undefined'),
+      ƒNull: ƒ => ƒ('null'),
+      ƒEmpty: ƒ => ƒ('empty'),
+    };
+    expect(new Calculator(formulas).calculate(src)).to.be.deep.equal({
+      ...src,
+      ƒNaN: NaN,
+      ƒUndefined: undefined,
+      ƒNull: null,
+      ƒEmpty: '',
+    }, 'do not force zeros');
+
+    expect(new Calculator(formulas, { forceZeros: true }).calculate(src)).to.be.deep.equal({
+      ...src,
+      ƒNaN: 0,
+      ƒUndefined: 0,
+      ƒNull: 0,
+      ƒEmpty: 0,
+    }, 'force zeros');
+  });
 });

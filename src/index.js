@@ -1,7 +1,8 @@
 import _ from 'lodash';
 
-function Calculator(formulas) {
+function Calculator(formulas, options = {}) {
   this.formulas = formulas;
+  this.options = options;
 }
 
 Calculator.prototype.calculate = function calculate(item) {
@@ -30,7 +31,13 @@ Calculator.prototype.calculate = function calculate(item) {
   const cache = {};
   const getter = (path) => {
     if (!(path in cache)) {
-      cache[path] = expandedFormulas[path] ? expandedFormulas[path](getter) : _.get(item, path);
+      let value = expandedFormulas[path] ? expandedFormulas[path](getter) : _.get(item, path);
+      if (_.isNaN(value) || _.isUndefined(value) || _.isNull(value) || value === '') {
+        if (this.options.forceZeros) {
+          value = 0;
+        }
+      }
+      cache[path] = value;
     }
     return cache[path];
   };
