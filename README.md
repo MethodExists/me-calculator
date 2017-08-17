@@ -2,7 +2,6 @@
 
 [![Travis][build-badge]][build]
 [![npm package][npm-badge]][npm]
-[![npm version](https://badge.fury.io/js/%40methodexists%2Fme-calculator.svg)](https://badge.fury.io/js/%40methodexists%2Fme-calculator)
 [![Coveralls][coveralls-badge]][coveralls]
 
 Describe me-calculator here.
