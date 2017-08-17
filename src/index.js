@@ -27,17 +27,13 @@ Calculator.prototype.calculate = function calculate(item) {
     /* eslint-enable no-param-reassign */
   }, {});
 
+  const cache = {};
   const getter = (path) => {
-    // console.log('getter', path, expandedFormulas[path] ? expandedFormulas[path](getter) : _.get(item, path));
-    // TODO
-    // 1. make tests works
-    // 2. cache the getter to avoid 50k+ calls
-    // 3. log all values which getter produces, see if it safe to convert NaN, null, undefined to zeros?
-    let value = expandedFormulas[path] ? expandedFormulas[path](getter) : _.get(item, path);
-    if (_.isNaN(value) || _.isNull(value)) {
-      value = 0;
+    if (!_.has(cache, path)) {
+      cache[path] = expandedFormulas[path] ? expandedFormulas[path](getter) : _.get(item, path);
     }
-    return value;
+
+    return cache[path];
   };
 
   const resolvedFormulas = _.reduce(expandedFormulas, (result, formula, path) => {

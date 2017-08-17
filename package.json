@@ -33,6 +33,7 @@
   "devDependencies": {
     "@methodexists/eslint-config": "0.0.7",
     "chai": "^4.1.1",
+    "chai-spies": "^0.7.1",
     "husky": "^0.14.3",
     "lint-staged": "^4.0.3",
     "lodash": "^4.17.4",

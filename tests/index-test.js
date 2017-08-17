@@ -1,6 +1,10 @@
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
+import spies from 'chai-spies';
 import Calculator from '../src/index.js';
 
+chai.use(spies);
+
+/* eslint-disable no-unused-expressions */
 describe('Calculator', () => {
   let src;
   beforeEach(() => {
@@ -183,8 +187,7 @@ describe('Calculator', () => {
       valuesList: [1, 2, 3],
     };
     const calc = new Calculator({
-      sumList: ƒ =>
-        ƒ('calculatedList.0') + ƒ('calculatedList.1') + ƒ('calculatedList.2'),
+      sumList: ƒ => ƒ('calculatedList.0') + ƒ('calculatedList.1') + ƒ('calculatedList.2'),
       'calculatedList.*': (ƒ, i) => ƒ(`valuesList.${i}`),
     });
     const expected = { ...src,
@@ -193,5 +196,67 @@ describe('Calculator', () => {
       valuesList: [1, 2, 3],
     };
     expect(calc.calculate(src)).to.be.deep.equal(expected);
+  });
+
+  it('should cache getter results', () => {
+    const getters = chai.spy.object(['zero', 'one', 'two', 'three']);
+    src = {
+      get zero() { getters.zero(); return 0; },
+    };
+    const calc = new Calculator({
+      one: (ƒ) => { getters.one(); return ƒ('zero') + 1; },
+      two: (ƒ) => { getters.two(); return ƒ('one') + 1; },
+      three: (ƒ) => { getters.three(); return ƒ('two') + 1; },
+    });
+    const expected = {
+      zero: 0,
+      one: 1,
+      two: 2,
+      three: 3,
+    };
+    expect(calc.calculate(src)).to.be.deep.equal(expected);
+
+    // one call from formulas another from accessing src
+    expect(getters.zero).to.have.been.called.exactly(2);
+    expect(getters.one).to.have.been.called.exactly(2);
+    expect(getters.two).to.have.been.called.exactly(2);
+    expect(getters.three).to.have.been.called.exactly(1);
+  });
+
+  it('should reset cache on each new calc', () => {
+    const getters = chai.spy.object(['one', 'two', 'three']);
+    src = {
+      zero: 0,
+    };
+    const calc = new Calculator({
+      one: (ƒ) => { getters.one(); return ƒ('zero') + 1; },
+      two: (ƒ) => { getters.two(); return ƒ('one') + 1; },
+      three: (ƒ) => { getters.three(); return ƒ('two') + 1; },
+    });
+    const expected = {
+      zero: 0,
+      one: 1,
+      two: 2,
+      three: 3,
+    };
+    expect(calc.calculate(src)).to.be.deep.equal(expected);
+    expect(getters.one).to.have.been.called.exactly(2);
+    expect(getters.two).to.have.been.called.exactly(2);
+    expect(getters.three).to.have.been.called.exactly(1);
+
+    // calc with updated input
+    src.zero = 1;
+    getters.one.reset();
+    getters.two.reset();
+    getters.three.reset();
+    expected.zero = 1;
+    expected.one = 2;
+    expected.two = 3;
+    expected.three = 4;
+
+    expect(calc.calculate(src)).to.be.deep.equal(expected);
+    expect(getters.one).to.have.been.called.exactly(2);
+    expect(getters.two).to.have.been.called.exactly(2);
+    expect(getters.three).to.have.been.called.exactly(1);
   });
 });
