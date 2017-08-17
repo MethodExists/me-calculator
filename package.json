@@ -1,0 +1,51 @@
+{
+  "name": "@methodexists/me-calculator",
+  "version": "0.0.1",
+  "description": "Formulas calculator",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "files": [
+    "es",
+    "lib",
+    "umd"
+  ],
+  "scripts": {
+    "build": "nwb build-web-module",
+    "clean": "nwb clean-module",
+    "test": "nwb test",
+    "test:coverage": "nwb test --coverage",
+    "test:watch": "nwb test --server",
+    "lint": "eslint src tests",
+    "precommit": "lint-staged",
+    "prepublishOnly": "npm run test && npm run build",
+    "prepush": "npm run lint --silent && npm run test",
+    "patch": "npm run prepublishOnly && npm version patch && git push --no-verify && git push --tags --no-verify && npm publish --ignore-scripts",
+    "minor": "npm run prepublishOnly && npm version minor && git push --no-verify && git push --tags --no-verify && npm publish --ignore-scripts"
+  },
+  "lint-staged": {
+    "*.{js}": [
+      "eslint"
+    ]
+  },
+  "peerDependencies": {
+    "lodash": "4.x"
+  },
+  "devDependencies": {
+    "@methodexists/eslint-config": "0.0.7",
+    "chai": "^4.1.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.0.3",
+    "lodash": "^4.17.4",
+    "nwb": "0.17.x"
+  },
+  "author": "Ilya Belsky",
+  "homepage": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MethodExists/me-calculator"
+  },
+  "bugs": {
+    "url": "https://github.com/MethodExists/me-calculator/issues"
+  }
+}
