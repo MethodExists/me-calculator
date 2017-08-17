@@ -6,11 +6,11 @@
 
 Describe me-calculator here.
 
-[build-badge]: https://img.shields.io/travis/user/repo/master.png?style=flat-square
-[build]: https://travis-ci.org/user/repo
+[build-badge]: https://travis-ci.org/MethodExists/me-calculator.svg?branch=master
+[build]: https://travis-ci.org/MethodExists/me-calculator
 
 [npm-badge]: https://img.shields.io/npm/v/npm-package.png?style=flat-square
-[npm]: https://www.npmjs.org/package/npm-package
+[npm]: https://www.npmjs.org/package/@methodexists/me-calculator
 
-[coveralls-badge]: https://img.shields.io/coveralls/user/repo/master.png?style=flat-square
-[coveralls]: https://coveralls.io/github/user/repo
+[coveralls-badge]: https://coveralls.io/repos/github/MethodExists/me-calculator/badge.svg
+[coveralls]: https://coveralls.io/github/MethodExists/me-calculator
