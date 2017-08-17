@@ -333,4 +333,29 @@ describe('Calculator', () => {
       ƒEmpty: 0,
     }, 'force zeros');
   });
+
+  it('should log into console on invalid values when `debug` is true', () => {
+    src = {
+      NaN,
+      undefined,
+      null: null,
+      empty: '',
+    };
+    const formulas = {
+      ƒNaN: ƒ => ƒ('NaN'),
+      ƒUndefined: ƒ => ƒ('undefined'),
+      ƒNull: ƒ => ƒ('null'),
+      ƒEmpty: ƒ => ƒ('empty'),
+    };
+    const warn = console.warn;
+    console.warn = chai.spy();
+
+    new Calculator(formulas).calculate(src);
+    expect(console.warn).not.to.have.been.called();
+
+    new Calculator(formulas, { debug: true }).calculate(src);
+    expect(console.warn).to.have.been.called(4);
+
+    console.warn = warn;
+  });
 });

@@ -33,6 +33,9 @@ Calculator.prototype.calculate = function calculate(item) {
     if (!(path in cache)) {
       let value = expandedFormulas[path] ? expandedFormulas[path](getter) : _.get(item, path);
       if (_.isNaN(value) || _.isUndefined(value) || _.isNull(value) || value === '') {
+        if (this.options.debug) {
+          console.warn(path, 'is', value);
+        }
         if (this.options.forceZeros) {
           value = 0;
         }
