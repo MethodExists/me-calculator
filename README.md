@@ -2,6 +2,7 @@
 
 [![Travis][build-badge]][build]
 [![npm package][npm-badge]][npm]
+[![npm version](https://badge.fury.io/js/%40methodexists%2Fme-calculator.svg)](https://badge.fury.io/js/%40methodexists%2Fme-calculator)
 [![Coveralls][coveralls-badge]][coveralls]
 
 Describe me-calculator here.
@@ -9,7 +10,7 @@ Describe me-calculator here.
 [build-badge]: https://travis-ci.org/MethodExists/me-calculator.svg?branch=master
 [build]: https://travis-ci.org/MethodExists/me-calculator
 
-[npm-badge]: https://img.shields.io/npm/v/npm-package.png?style=flat-square
+[npm-badge]: https://img.shields.io/npm/v/@methodexists/me-calculator.png?style=flat-square
 [npm]: https://www.npmjs.org/package/@methodexists/me-calculator
 
 [coveralls-badge]: https://coveralls.io/repos/github/MethodExists/me-calculator/badge.svg
