@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import chai, { expect } from 'chai';
 import spies from 'chai-spies';
 import Calculator from '../src/index.js';
@@ -117,6 +118,16 @@ describe('Calculator', () => {
       obj: { ...src },
       formulas: { 'list.*': () => 0 },
       expected: { ...src },
+    }, {
+      testingFor: 'edge case: when list accessed first and fields in the list accessed second',
+      obj: { ...src, list: [{ v: 42 }, { v: 43 }] },
+      formulas: {
+        total: ƒ => _.sum(_.map(ƒ('list'), (l, i) => ƒ(`list.${i}.v`))),
+      },
+      expected: { ...src,
+        list: [{ v: 42 }, { v: 43 }],
+        total: 42 + 43,
+      },
     }].forEach(({ obj, formulas, expected, testingFor }) => {
       const calc = new Calculator(formulas);
       expect(calc.calculate(obj)).to.be.deep.equal(expected, testingFor);
@@ -258,5 +269,38 @@ describe('Calculator', () => {
     expect(getters.one).to.have.been.called.exactly(2);
     expect(getters.two).to.have.been.called.exactly(2);
     expect(getters.three).to.have.been.called.exactly(1);
+  });
+
+  it('should recalculate outdated formulas', () => {
+    src = {
+      crops: [{
+        acres: 10,
+        price: 1,
+        results: { profit: -1 }, // from previous calculation
+      }, {
+        acres: 10,
+        price: 2,
+        results: { profit: -1 }, // from previous calculation
+      }],
+    };
+    const calc = new Calculator({
+      totalAcres: ƒ => _.sum(ƒ('crops').map((unused, i) => ƒ(`crops.${i}.acres`))),
+      totalFarmProfit: ƒ => _.sum(ƒ('crops').map((unused, i) => ƒ(`crops.${i}.results.profit`))),
+      'crops.*.results.profit': (ƒ, i) => ƒ(`crops.${i}.acres`) * ƒ(`crops.${i}.price`),
+    });
+    const expected = {
+      crops: [{
+        acres: 10,
+        price: 1,
+        results: { profit: 10 },
+      }, {
+        acres: 10,
+        price: 2,
+        results: { profit: 20 },
+      }],
+      totalAcres: 20,
+      totalFarmProfit: 30,
+    };
+    expect(calc.calculate(src)).to.be.deep.equal(expected);
   });
 });

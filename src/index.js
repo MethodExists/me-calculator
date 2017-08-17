@@ -29,15 +29,13 @@ Calculator.prototype.calculate = function calculate(item) {
 
   const cache = {};
   const getter = (path) => {
-    if (!_.has(cache, path)) {
+    if (!(path in cache)) {
       cache[path] = expandedFormulas[path] ? expandedFormulas[path](getter) : _.get(item, path);
     }
-
     return cache[path];
   };
 
   const resolvedFormulas = _.reduce(expandedFormulas, (result, formula, path) => {
-    // console.log('ƒ', path, formula(getter));
     _.set(result, path, formula(getter));
     return result;
   }, {});
